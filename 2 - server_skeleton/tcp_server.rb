@@ -1,4 +1,5 @@
 require 'socket'
+require_relative 'lib/request.rb'
 
 class HTTPServer
 
@@ -20,12 +21,32 @@ class HTTPServer
       puts data
       puts '-' * 40
 
-      #request = Request.new(data)
+      request = Request.new(data)
+      p request
 
-      html = "<h1>Hello, World!</h1>"
+      routes = [{resource: "/hello", html: "<h1>Hello, World!</h1>" },{resource: "/wat", html: "<h1>WAT!</h1>" },{resource: "/minipekka/pancake", html: File.read("views/test.html") }]
 
-      session.print "HTTP/1.1 200\r\n"
-      session.print "Content-Type: text/html\r\n"
+      status = 404
+      content_type = "html"
+      what = 0
+
+      html = "<h1> Error #{status} </h1>"
+      routes.each do |rot|
+       if  request.resource == rot[:resource]
+        html = rot[:html]
+        status = 200
+       end
+      end
+      
+
+      # if request.resource == "/hello"
+      #   html = "<h1>Hello, World!</h1> "
+      # else
+      #   html = "<h1> Wat </h1>"
+      # end
+
+      session.print "HTTP/1.1 #{status}\r\n"
+      session.print "Content-Type: text/#{content_type}\r\n"
       session.print "\r\n"
       session.print html
       session.close

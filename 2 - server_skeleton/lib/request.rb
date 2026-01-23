@@ -29,18 +29,21 @@ class Request
       if @method == "GET"
         holder = @resource
         #p holder
-        holder = holder.split("?") #kan vara felet
-        #p holder
-        holder.delete_at(0)
-        #p holder
-        holder = holder[0]
-        #p holder
-        holder = holder.split("&") #här blir det fel 
-        #p holder
-        holder.each do |param|
-          param = param.split("=")
-          #p param
-          @params[param[0]] = param[1]
+        if holder.include?("?")
+          holder = holder.split("?") #kan vara felet
+        
+          #p holder
+          holder.delete_at(0)
+          #p holder
+          holder = holder[0]
+          #p holder
+          holder = holder.split("&") #här blir det fel 
+          #p holder
+          holder.each do |param|
+            param = param.split("=")
+            #p param
+            @params[param[0]] = param[1]
+          end
         end
       elsif @method == "POST"
         param = param.split("&")
