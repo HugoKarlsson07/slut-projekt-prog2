@@ -31,7 +31,6 @@ class Request
         #p holder
         if holder.include?("?")
           holder = holder.split("?") #kan vara felet
-        
           #p holder
           holder.delete_at(0)
           #p holder
