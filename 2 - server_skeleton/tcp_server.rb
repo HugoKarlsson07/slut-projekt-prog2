@@ -7,6 +7,7 @@ class HTTPServer
     @port = port
   end
 
+
   def start
     server = TCPServer.new(@port)
     puts "Listening on #{@port}"
@@ -22,21 +23,37 @@ class HTTPServer
       puts '-' * 40
 
       request = Request.new(data)
-      p request
+      #p request
+      p request.headers
+      #exist?(resource)
 
       routes = [{resource: "/hello", html: "<h1>Hello, World!</h1>" },{resource: "/wat", html: "<h1>WAT!</h1>" },{resource: "/minipekka/pancake", html: File.read("views/test.html") }]
+
+      
 
       status = 404
       content_type = "html"
       what = 0
 
+      p request.resource
+
       html = "<h1> Error #{status} </h1>"
+      found = 0
       routes.each do |rot|
-       if  request.resource == rot[:resource]
+       if  request.resource == rot[:resource] 
         html = rot[:html]
         status = 200
+        found = 1
        end
       end
+      if found == 0
+        if File.exist?("./public#{request.resource}.html") == true
+          html = File.read("./public#{request.resource}.html")
+          status = 200
+        end
+      end
+       
+      
       
 
       # if request.resource == "/hello"
