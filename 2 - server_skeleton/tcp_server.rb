@@ -23,9 +23,8 @@ class HTTPServer
       puts '-' * 40
 
       request = Request.new(data)
-      #p request
-      p request.headers
-      #exist?(resource)
+     
+    
 
       routes = [{resource: "/hello", html: "<h1>Hello, World!</h1>" },{resource: "/wat", html: "<h1>WAT!</h1>" },{resource: "/minipekka/pancake", html: File.read("views/test.html") }]
 
@@ -35,7 +34,6 @@ class HTTPServer
       content_type = "html"
       what = 0
 
-      p request.resource
 
       html = "<h1> Error #{status} </h1>"
       found = 0
@@ -47,20 +45,14 @@ class HTTPServer
        end
       end
       if found == 0
-        if File.exist?("./public#{request.resource}.html") == true
-          html = File.read("./public#{request.resource}.html")
+        if File.exist?("./public#{request.resource}") == true
+          url_type = request.resource.split(".")
+          url_type = url_type[1]
+          html = File.read("./public#{request.resource}") #användaren måste specifiera filtyp
           status = 200
         end
       end
        
-      
-      
-
-      # if request.resource == "/hello"
-      #   html = "<h1>Hello, World!</h1> "
-      # else
-      #   html = "<h1> Wat </h1>"
-      # end
 
       session.print "HTTP/1.1 #{status}\r\n"
       session.print "Content-Type: text/#{content_type}\r\n"
