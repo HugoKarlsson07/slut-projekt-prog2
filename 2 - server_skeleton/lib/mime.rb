@@ -1,29 +1,6 @@
-def parse_mime_table(input)
+def parse_mime_table()
   mime_map = {}
-
-  input.each_line do |line|
-    line = line.strip
-    next if line.empty? || line.start_with?("Extension")
-
-    # Split on tabs or 2+ spaces (handles pasted tables well)
-    columns = line.split(/\t+|\s{2,}/)
-    next if columns.size < 3
-
-    extensions_raw = columns[0]
-    mime_type     = columns[-1]
-
-    # Extract individual extensions
-    extensions_raw.split(",").each do |ext|
-      ext = ext.strip
-      ext = ext.sub(/^\./, "") # remove leading dot
-      mime_map[ext] = mime_type
-    end
-  end
-
-  mime_map
-end
-
-mime_map = parse_mime_table("Extension	Kind of document	MIME Type
+  input = "Extension	Kind of document	MIME Type
 .aac	AAC audio	audio/aac
 .abw	AbiWord document	application/x-abiword
 .apng	Animated Portable Network Graphics (APNG) image	image/apng
@@ -99,7 +76,26 @@ mime_map = parse_mime_table("Extension	Kind of document	MIME Type
 .3gp	3GPP audio/video container	video/3gpp; audio/3gpp if it doesn't contain video
 .3g2	3GPP2 audio/video container	video/3gpp2; audio/3gpp2 if it doesn't contain video
 .7z	7-zip archive	application/x-7z-compressed
-")
+"
 
-p mime_map["jpg"]
-p mime_map["jpeg"]
+  input.each_line do |line|
+    line = line.strip
+    next if line.empty? || line.start_with?("Extension")
+
+    # Split on tabs or 2+ spaces (handles pasted tables well)
+    columns = line.split(/\t+|\s{2,}/)
+    next if columns.size < 3
+
+    extensions_raw = columns[0]
+    mime_type     = columns[-1]
+
+    # Extract individual extensions
+    extensions_raw.split(",").each do |ext|
+      ext = ext.strip
+      ext = ext.sub(/^\./, "") # remove leading dot
+      mime_map[ext] = mime_type
+    end
+  end
+
+  mime_map
+end

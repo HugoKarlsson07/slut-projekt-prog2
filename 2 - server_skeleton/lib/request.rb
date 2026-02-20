@@ -7,7 +7,9 @@ class Request
     @params = Hash.new
     @content = fileContent
 
+    p @content
     @content = @content.split(/\n\n/)
+    p @content
     param = @content[1]
 
     @content.delete_at(1)
@@ -25,6 +27,8 @@ class Request
           @headers[header[0]] = header[1]
         end
     end
+    p param
+    p "tester är kul"
     if @resource != '/'
       if @method == "GET"
         holder = @resource
@@ -45,7 +49,8 @@ class Request
           end
         end
       elsif @method == "POST"
-        param = param.split("&")
+        p param
+        param =  param.split("&")
         param.each do |arg|
           arg = arg.split("=")
           @params [arg[0]] = arg[1]
