@@ -1,6 +1,7 @@
 require 'socket'
 require_relative 'lib/request.rb'
 require_relative 'lib/mime.rb'
+require 'slim'
 
 class HTTPServer
 
@@ -8,10 +9,6 @@ class HTTPServer
     @port = port
     @routes = rout
     @routes = [] unless @routes.is_a?(Array)
-  end
-
-  def get(routing) #routing är en sträng som vi vill tildella resorce
-
   end
   
 
@@ -31,9 +28,17 @@ class HTTPServer
 
       request = Request.new(data)
 
-      p "++++++++++++++++++++++++++"
-      p request.inspect
-      p "++++++++++++++++++++++++++"
+
+      if request.headers.hash_key?(":Content-Length") #hur många byttes som headers är
+        headers_length = request.headers[:Content-Length]
+      end
+
+      #p "++++++++++++++++++++++++++"
+      #p #request.inspect #o jag fatta rätt inspect tar om det är en post då ska den läsa content-length mycket sen kommer params 
+      #p "++++++++++++++++++++++++++"
+
+
+      #i headers fins content-lentgh den säger hur många bytes heders är så då kan du kolla requesten och se efter så många byttes kommer då vara params och har den inte content-length är det en 
 
       #är det en post?
       #kolla i content-length(????) (headers)
@@ -45,14 +50,12 @@ class HTTPServer
       what = 0
       mime_map = parse_mime_table()
 
-      p request.resource
       html = "<h1> Error #{status} </h1>"
       route = @routes.find { |r| r[:resource] == request.resource }
 
       if route
         html = route[:html]
         status = 200
-        p html
       else
         if File.exist?("./public#{request.resource}") == true
           _, file_ending = request.resource.split(".")

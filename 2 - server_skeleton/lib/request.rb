@@ -7,9 +7,9 @@ class Request
     @params = Hash.new
     @content = fileContent
 
-    p @content
+    #p @content
     @content = @content.split(/\n\n/)
-    p @content
+    #p @content
     param = @content[1]
 
     @content.delete_at(1)
@@ -21,14 +21,16 @@ class Request
     @headers = Hash.new
 
   
+   
+
     @content.each do |header|
         if header.include?(": ")
           header = header.split(": ")
           @headers[header[0]] = header[1]
         end
     end
-    p param
-    p "tester är kul"
+    #p param
+    #p "tester är kul"
     if @resource != '/'
       if @method == "GET"
         holder = @resource
@@ -48,13 +50,16 @@ class Request
             @params[param[0]] = param[1]
           end
         end
-      elsif @method == "POST"
-        p param
-        param =  param.split("&")
-        param.each do |arg|
-          arg = arg.split("=")
-          @params [arg[0]] = arg[1]
-        end
+      elsif @method == "POST" &&  @headers.has_key?(:content-length)
+        #p param
+        headers_length = @headers[:content-length]
+        params = session.gets(headers_length) # här blir det knass här ska jag läsa in det som kommer efter och tilldela till params 
+        @params = params # måste fixa 
+        # param =  param.split("&")
+        # param.each do |arg|
+        #   arg = arg.split("=")
+        #   @params [arg[0]] = arg[1]
+        # end
       end
     else
       @params = {}
