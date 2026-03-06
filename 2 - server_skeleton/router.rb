@@ -3,12 +3,10 @@ class Router
   def initialize()
     @routes = []
   end
-  def get(resource)
-    content = yield
-    @routes << {resource: resource, method: "get", html: content} 
+  def get(resource, &block)
+    @routes << {resource: resource, method: "GET", block: block} 
   end
-  def post(resource)
-    content = yield
-    @routes << {resource: resource, method: "POST",html: content}
+  def post(resource, &block) 
+    @routes << {resource: resource, method: "POST",block: block}
   end
 end

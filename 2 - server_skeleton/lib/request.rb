@@ -50,17 +50,16 @@ class Request
             @params[param[0]] = param[1]
           end
         end
-      elsif @method == "POST" &&  @headers.has_key?(:content-length)
-        #p param
-        headers_length = @headers[:content-length]
-        params = session.gets(headers_length) # här blir det knass här ska jag läsa in det som kommer efter och tilldela till params 
-        @params = params # måste fixa 
-        # param =  param.split("&")
-        # param.each do |arg|
-        #   arg = arg.split("=")
-        #   @params [arg[0]] = arg[1]
-        # end
       end
+
+      def add_post_params(request)
+        param = request.split("&")
+        param.each do |arg|
+          arg = arg.split("=")
+          @params [arg[0]] = arg[1]
+        end
+      end
+
     else
       @params = {}
     end

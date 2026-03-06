@@ -28,9 +28,15 @@ class HTTPServer
 
       request = Request.new(data)
 
+      if request.headers.has_key?("Content-Length") 
+        headers_length = request.headers["Content-Length"] 
+        något = session.gets(headers_length.to_i)
+        puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+        p något
+        request.add_post_params(något)
+        p request.params
+        puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 
-      if request.headers.hash_key?(":Content-Length") #hur många byttes som headers är
-        headers_length = request.headers[:Content-Length]
       end
 
       #p "++++++++++++++++++++++++++"
@@ -51,10 +57,11 @@ class HTTPServer
       mime_map = parse_mime_table()
 
       html = "<h1> Error #{status} </h1>"
-      route = @routes.find { |r| r[:resource] == request.resource }
-
+      route = @routes.find do |r| 
+        r[:resource] == request.resource && r[:method] == request.method
+      end
       if route
-        html = route[:html]
+        html = route[:block].call
         status = 200
       else
         if File.exist?("./public#{request.resource}") == true
@@ -77,3 +84,4 @@ end
 
 # server = HTTPServer.new(4567)
 # server.start
+ 
