@@ -29,37 +29,29 @@ class Request
           @headers[header[0]] = header[1]
         end
     end
-    #p param
-    #p "tester är kul"
-    if @resource != '/'
-      if @method == "GET"
-        holder = @resource
-        #p holder
-        if holder.include?("?")
-          holder = holder.split("?") #kan vara felet
-          #p holder
-          holder.delete_at(0)
-          #p holder
-          holder = holder[0]
-          #p holder
-          holder = holder.split("&") #här blir det fel 
-          #p holder
-          holder.each do |param|
-            param = param.split("=")
-            #p param
-            @params[param[0]] = param[1]
-          end
-        end
-      end
-
-      def add_post_params(request)
+    
+    def add_post_params(request)
         param = request.split("&")
         param.each do |arg|
           arg = arg.split("=")
           @params [arg[0]] = arg[1]
         end
+    end
+    
+    if @resource != '/'
+      if @method == "GET"
+        holder = @resource
+        if holder.include?("?")
+          holder = holder.split("?") 
+          holder.delete_at(0)
+          holder = holder[0]
+          holder = holder.split("&")  
+          holder.each do |param|
+            param = param.split("=")
+            @params[param[0]] = param[1]
+          end
+        end
       end
-
     else
       @params = {}
     end

@@ -31,44 +31,32 @@ class HTTPServer
       if request.headers.has_key?("Content-Length") 
         headers_length = request.headers["Content-Length"] 
         något = session.gets(headers_length.to_i)
-        puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-        p något
-        request.add_post_params(något)
-        p request.params
-        puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-
       end
-
-      #p "++++++++++++++++++++++++++"
-      #p #request.inspect #o jag fatta rätt inspect tar om det är en post då ska den läsa content-length mycket sen kommer params 
-      #p "++++++++++++++++++++++++++"
-
-
-      #i headers fins content-lentgh den säger hur många bytes heders är så då kan du kolla requesten och se efter så många byttes kommer då vara params och har den inte content-length är det en 
-
-      #är det en post?
-      #kolla i content-length(????) (headers)
-      #banan = session.gets(så många bytes som det var)
-      #vad finns nu i banan? vad ska du göra med bananen?
 
       status = 404
       content = "text/html"
       what = 0
       mime_map = parse_mime_table()
-
       html = "<h1> Error #{status} </h1>"
-      route = @routes.find do |r| 
-        r[:resource] == request.resource && r[:method] == request.method
-      end
-      if route
-        html = route[:block].call
-        status = 200
-      else
-        if File.exist?("./public#{request.resource}") == true
-          _, file_ending = request.resource.split(".")
-          content = mime_map[file_ending]
-          html = File.binread("./public#{request.resource}") 
+
+
+      route = @routes.each do |r| 
+        p r[:resource]
+        p r[:method]
+        p "------------------"
+        p r
+        p "------------------"
+        if request.resource.match?(r[:resource]) && request.method == r[:method]
+          äpple = request.resource.match(r[:resource])
+          html = r[:block].call(*äpple.captures)
           status = 200
+        else
+          if File.exist?("./public#{request.resource}") == true
+            _, file_ending = request.resource.split(".")
+            content = mime_map[file_ending]
+            html = File.binread("./public#{request.resource}") 
+            status = 200
+          end 
         end
       end
       content_length = html.bytesize
