@@ -99,3 +99,4 @@ def parse_mime_table()
 
   mime_map
 end
+p parse_mime_table
