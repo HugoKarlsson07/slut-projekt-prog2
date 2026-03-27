@@ -20,7 +20,7 @@ end
 
 
 
-server = HTTPServer.new(4567, rut.routes)
+server = HTTPServer.new(4567, rut)
 server.start
 
 

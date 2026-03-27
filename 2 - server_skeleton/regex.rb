@@ -2,14 +2,15 @@
 
 def reg(string)
   x = string
-  if x.match?(/(\/\w+)+/)
+  if x.match?(/(\/:\w+)+/)
     x = x.gsub(/\/\:\w+/, "\/(\\w+)+")
     y = Regexp.new(x)
     return y
   else
-    return x
+    x = "^" + x + "$"
+    y = Regexp.new(x)
+    y = Regexp.new("^#{x}&")
   end
 end
-
 
 
