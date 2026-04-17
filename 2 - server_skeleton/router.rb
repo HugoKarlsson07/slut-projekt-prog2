@@ -23,7 +23,12 @@ class Router
     end
   end
 
-  
+  #Prints to the session
+  #
+  # @params request [hash] the hash contains the request 
+  # @params block [string] contains the body of the http request
+  # @params found [boolean] The status 
+  # @return [found] 
   def responde_routing(request)
     found = false
     @routes.each do |r| 

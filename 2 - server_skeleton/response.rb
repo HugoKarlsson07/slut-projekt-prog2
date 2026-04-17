@@ -7,7 +7,6 @@ class Response
   end
 
   def responde(status, block, content)
-    p block
     content_length = block.bytesize
     @session.print "HTTP/1.1 #{status}\r\n"
     @session.print "Content-Type: #{content}\r\n"
